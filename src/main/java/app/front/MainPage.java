@@ -17,7 +17,7 @@ public class MainPage extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        Parent parent = FXMLLoader.load(getClass().getResource("fxml/main.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("/main.fxml"));
         primaryStage.setTitle("HSE.Life app");
         primaryStage.setMinWidth(300);
         primaryStage.setMinHeight(300);
