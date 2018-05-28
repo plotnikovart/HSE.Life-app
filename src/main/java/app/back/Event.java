@@ -10,7 +10,7 @@ public class Event
     // 3 - type
     // 4 - photoRef
     // 5 - ref
-    // 6 - data
+    // 6 - date
     // 7 - time (необязательный)
     // 8 - place (необязательный)
 
@@ -18,6 +18,7 @@ public class Event
 
     public Event()
     {
+        status = "Ожидает";
         params = new String[PARAMS_NUMBER];
     }
 
@@ -40,12 +41,17 @@ public class Event
         }
     }
 
+    public void setStatus(String status)
+    {
+        this.status = status;
+    }
+
     /**
      * Устанавливает значение параметра мероприятия
      * @param paramNumber Номер параметра
      * @param value       Значение параметра
      */
-    void setParam(int paramNumber, String value)
+    public void setParam(int paramNumber, String value)
     {
         params[paramNumber] = value;
     }
@@ -57,6 +63,11 @@ public class Event
     public String[] getEventParams()
     {
         return params;
+    }
+
+    public String getParam(int paramNumber)
+    {
+        return params[paramNumber];
     }
 
     /**
@@ -72,4 +83,5 @@ public class Event
     {
         return status;
     }
+
 }

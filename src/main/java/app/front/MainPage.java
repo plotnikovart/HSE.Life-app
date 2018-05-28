@@ -23,7 +23,8 @@ public class MainPage extends Application
         primaryStage.setMinHeight(300);
         Scene scene = new Scene(parent);
         primaryStage.setScene(scene);
-
         primaryStage.show();
+
+        EditController.mainPage = this;
     }
 }

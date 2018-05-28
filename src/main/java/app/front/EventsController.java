@@ -7,56 +7,47 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class EventsController
 {
-    private ObservableList<Event> eventsData;
+    private EditController editController;
+
+    @FXML private ChoiceBox<String> choiceBox;
+    @FXML public TableView<Event> tableView;
+    @FXML private TableColumn<Event, String> nameColumn;
+    @FXML private TableColumn<Event, String> statusColumn;
 
     @FXML
-    private ChoiceBox<String> choiceBox;
-
-    @FXML
-    private TableView<Event> tableView;
-    @FXML
-    private TableColumn<Event, String> nameColumn;
-    @FXML
-    private TableColumn<Event, String> statusColumn;
-
-    @FXML
-    private void initialize()
+    void initialize()
     {
         // Добавление списка университетов
         LinkedList<String> universities = EnumTable.getUniversities();
         choiceBox.getItems().addAll(universities);
 
         // Инициализация колонок таблицы
-        nameColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("name"));
-        statusColumn.setCellValueFactory(new PropertyValueFactory<Event, String>("status"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         tableView.setEditable(true);
     }
 
-
-    // todo добавить время
-
     public void downloadEvents(ActionEvent actionEvent)
     {
-        List<String> names = EventsTable.getEventsNames(choiceBox.getValue());
-        eventsData = FXCollections.observableArrayList();
-
-        for (String name : names)
-        {
-            eventsData.add(new Event(name, "Ожидает"));
-        }
+        List<Event> events = EventsTable.getEvents(choiceBox.getValue());
+        ObservableList<Event> eventsData = FXCollections.observableArrayList(events);
 
         tableView.setItems(eventsData);
     }
@@ -64,8 +55,37 @@ public class EventsController
 
     public void tuneEvent(TableColumn.CellEditEvent cellEditEvent)
     {
+        if (editController == null)
+        {
+            try
+            {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit.fxml"));
+                Parent parent = loader.load();
+                Stage stage = new Stage();
+                stage.setTitle("Мероприятие");
+                stage.setMinWidth(365);
+                stage.setMinHeight(450);
+                Scene scene = new Scene(parent);
+                stage.setScene(scene);
+                stage.initModality(Modality.APPLICATION_MODAL);
+
+                editController = loader.getController();
+                editController.setStage(stage);
+                EditController.eventsController = this;
+
+                stage.setOnCloseRequest(event ->
+                {
+                    editController.setSize(stage.getWidth(), stage.getHeight());
+                    stage.hide();
+                });
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
         Event event = (Event)cellEditEvent.getRowValue();
-        System.out.println("sd");
-        System.out.println(event.getName());
+        editController.showWindow(event);
     }
 }
