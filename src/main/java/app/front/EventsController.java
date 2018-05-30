@@ -24,9 +24,10 @@ import java.util.List;
 public class EventsController
 {
     private EditController editController;
+    private short refreshed;
 
     @FXML private ChoiceBox<String> choiceBox;
-    @FXML public TableView<Event> tableView;
+    @FXML private TableView<Event> tableView;
     @FXML private TableColumn<Event, String> nameColumn;
     @FXML private TableColumn<Event, String> statusColumn;
 
@@ -55,6 +56,12 @@ public class EventsController
 
     public void tuneEvent(TableColumn.CellEditEvent cellEditEvent)
     {
+        if (refreshed != 0)
+        {
+            refreshed--;
+            return;
+        }
+
         if (editController == null)
         {
             try
@@ -87,5 +94,11 @@ public class EventsController
 
         Event event = (Event)cellEditEvent.getRowValue();
         editController.showWindow(event);
+    }
+
+    void updateTable()
+    {
+        tableView.refresh();
+        refreshed = 2;
     }
 }

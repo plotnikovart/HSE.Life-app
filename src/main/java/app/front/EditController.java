@@ -118,7 +118,7 @@ public class EditController
         {
             //EventsTable.deleteEvent(currentEvent);
             currentEvent.setStatus("Удалено");
-            eventsController.tableView.refresh();
+            eventsController.updateTable();
         }
 
         if (allowFlag.isSelected())
