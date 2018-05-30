@@ -59,37 +59,57 @@ public class EventsController
         {
             if (editController == null)
             {
-                try
-                {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit.fxml"));
-                    Parent parent = loader.load();
-                    Stage stage = new Stage();
-                    stage.setTitle("Мероприятие");
-                    stage.setMinWidth(365);
-                    stage.setMinHeight(450);
-                    Scene scene = new Scene(parent);
-                    stage.setScene(scene);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-
-                    editController = loader.getController();
-                    editController.setStage(stage);
-                    EditController.eventsController = this;
-
-                    stage.setOnCloseRequest(event ->
-                    {
-                        editController.setSize(stage.getWidth(), stage.getHeight());
-                        stage.hide();
-                    });
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
+                initEditController();
             }
 
             Event event = tableView.getSelectionModel().getSelectedItem();
             editController.showWindow(event);
         }
+    }
+
+    public void addEvent(MouseEvent mouseEvent)
+    {
+        if (editController == null)
+        {
+            initEditController();
+        }
+
+        editController.showWindow();
+    }
+
+    private void initEditController()
+    {
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit.fxml"));
+            Parent parent = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Мероприятие");
+            stage.setMinWidth(365);
+            stage.setMinHeight(450);
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            editController = loader.getController();
+            editController.setStage(stage);
+            EditController.eventsController = this;
+
+            stage.setOnCloseRequest(event ->
+            {
+                editController.setSize(stage.getWidth(), stage.getHeight());
+                stage.hide();
+            });
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    void addEventToTable(Event event)
+    {
+        tableView.getItems().add(event);
     }
 
     void updateTable()

@@ -13,6 +13,7 @@ public class EventsTable
 {
     private static PreparedStatement getEventsPS;
     private static PreparedStatement updateEventPS;
+    private static PreparedStatement addEventPS;
     private static PreparedStatement deleteEventPS;
 
     static void initialize(Connection connection) throws SQLException
@@ -45,6 +46,14 @@ public class EventsTable
                 "  datetime = CONCAT(?,' ',?), " +
                 "  place = ? " +
                 "WHERE id = ?");
+
+        addEventPS = connection.prepareStatement("INSERT INTO events " +
+                "(checked, name, description, university, type, photo, reference, datetime, place) " +
+                "VALUES " +
+                "  (?, ?, ?, " +
+                "(SELECT id FROM university_list WHERE university_list.name = ?)," +
+                "(SELECT id FROM event_type_list WHERE event_type_list.name = ?), " +
+                "?, ?, CONCAT(?, ' ', ?), ?)");
 
         deleteEventPS = connection.prepareStatement("DELETE FROM events WHERE id = ?");
     }
@@ -90,6 +99,25 @@ public class EventsTable
             updateEventPS.setInt(params.length + 2, event.getId());
 
             updateEventPS.execute();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void addEvent(Event event, boolean status)
+    {
+        try
+        {
+            addEventPS.setBoolean(1, status);
+            String[] params = event.getParams();
+            for (int i = 0; i < params.length; i++)
+            {
+                addEventPS.setString(i + 2, params[i]);
+            }
+
+            addEventPS.execute();
         }
         catch (SQLException e)
         {

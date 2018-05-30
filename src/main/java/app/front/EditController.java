@@ -16,6 +16,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Objects;
 
 
@@ -37,6 +38,7 @@ public class EditController
     public RadioButton allowFlag;
     public RadioButton deleteFlag;
 
+    boolean isAdded = false;
     private Event currentEvent;
     private Stage stage;
     private double currentWidth, currentHeight;     // текущая ширина и высота (для сохранения размеров окна)
@@ -64,10 +66,25 @@ public class EditController
         currentHeight = heigth;
     }
 
+    public void showPost(MouseEvent mouseEvent)
+    {
+        mainPage.getHostServices().showDocument(ref.getText());
+    }
+
+    public void showPhoto(MouseEvent mouseEvent)
+    {
+        mainPage.getHostServices().showDocument(photoRef.getText());
+    }
+
+    /**
+     * Показ формы для редактирования мероприятия
+     */
     void showWindow(Event event)
     {
         currentEvent = event;
-        resetColors();
+        resetFields();
+        isAdded = false;
+        deleteFlag.setVisible(true);
 
         name.setText(event.getParam(0));
         description.setText(event.getParam(1));
@@ -99,22 +116,19 @@ public class EditController
         stage.show();
     }
 
-    public void showPost(MouseEvent mouseEvent)
+    /**
+     * Показ формы для добавления мероприятия
+     */
+    void showWindow()
     {
-        mainPage.getHostServices().showDocument(ref.getText());
-    }
+        currentEvent = new Event();
+        resetFields();
+        isAdded = true;
+        deleteFlag.setVisible(false);
 
-    public void showPhoto(MouseEvent mouseEvent)
-    {
-        mainPage.getHostServices().showDocument(photoRef.getText());
-    }
-
-    public void cancel(MouseEvent mouseEvent)
-    {
-        currentWidth = stage.getWidth();
-        currentHeight = stage.getHeight();
-
-        stage.hide();
+        stage.setWidth(currentWidth);
+        stage.setHeight(currentHeight);
+        stage.show();
     }
 
     public void save(MouseEvent mouseEvent)
@@ -154,19 +168,46 @@ public class EditController
 
             currentEvent.setParam(8, place.getText());
 
-            if (allowFlag.isSelected())
+            // Если форма используется для добавления
+            if (isAdded)
             {
-                EventsTable.updateEvent(currentEvent, true);
-                currentEvent.setStatus(Event.READY);
+                if (allowFlag.isSelected())
+                {
+                    EventsTable.addEvent(currentEvent, true);
+                    currentEvent.setStatus(Event.READY);
+                }
+                else
+                {
+                    EventsTable.addEvent(currentEvent, false);
+                    currentEvent.setStatus(Event.WAITED);
+                }
+
+                eventsController.addEventToTable(currentEvent);
             }
-            else
+            else    // для редактирования
             {
-                EventsTable.updateEvent(currentEvent, false);
-                currentEvent.setStatus(Event.WAITED);
+                if (allowFlag.isSelected())
+                {
+                    EventsTable.updateEvent(currentEvent, true);
+                    currentEvent.setStatus(Event.READY);
+                }
+                else
+                {
+                    EventsTable.updateEvent(currentEvent, false);
+                    currentEvent.setStatus(Event.WAITED);
+                }
             }
         }
 
         eventsController.updateTable();
+        stage.hide();
+    }
+
+    public void cancel(MouseEvent mouseEvent)
+    {
+        currentWidth = stage.getWidth();
+        currentHeight = stage.getHeight();
+
         stage.hide();
     }
 
@@ -234,14 +275,30 @@ public class EditController
         return returnValue;
     }
 
-    private void resetColors()
+    private void resetFields()
     {
         String goodColor = "-fx-background-color: white;";
         name.setStyle(goodColor);
+        name.setText("");
         description.setStyle(goodColor);
+        description.setText("");
         ref.setStyle(goodColor);
+        ref.setText("");
         photoRef.setStyle(goodColor);
+        photoRef.setText("");
+        date.setValue(LocalDate.now());
         time.setStyle(goodColor);
+        time.setText("");
         place.setStyle(goodColor);
+        place.setText("");
+
+        if (university.getValue() == null)
+        {
+            university.setValue(university.getItems().get(0));
+        }
+        if (type.getValue() == null)
+        {
+            type.setValue(type.getItems().get(0));
+        }
     }
 }

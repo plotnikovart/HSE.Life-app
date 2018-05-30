@@ -126,8 +126,8 @@
       </GridPane>
       <GridPane>
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="125.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.0" minWidth="10.0" prefWidth="75.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="139.0" minWidth="10.0" prefWidth="139.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.0" minWidth="10.0" prefWidth="61.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="162.0" />
         </columnConstraints>
         <rowConstraints>
@@ -135,7 +135,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <DatePicker fx:id="date" GridPane.rowIndex="1">
+            <DatePicker fx:id="date" editable="false" prefHeight="25.0" prefWidth="108.0" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="20.0" right="5.0" />
                </GridPane.margin>
@@ -181,7 +181,7 @@
       </GridPane>
       <HBox prefHeight="46.0" prefWidth="365.0">
          <children>
-            <RadioButton fx:id="allowFlag" mnemonicParsing="false" text="Разрешить публикацию">
+            <RadioButton mnemonicParsing="false" selected="true" text="Ожидание">
                <HBox.margin>
                   <Insets left="20.0" top="20.0" />
                </HBox.margin>
@@ -189,7 +189,12 @@
                   <ToggleGroup fx:id="gr" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="deleteFlag" mnemonicParsing="false" text="Удалить" toggleGroup="$gr">
+            <RadioButton fx:id="allowFlag" mnemonicParsing="false" text="Публикация" toggleGroup="$gr">
+               <HBox.margin>
+                  <Insets left="20.0" top="20.0" />
+               </HBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="deleteFlag" mnemonicParsing="false" text="Удаление" toggleGroup="$gr">
                <HBox.margin>
                   <Insets left="20.0" top="20.0" />
                </HBox.margin>
