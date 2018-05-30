@@ -14,6 +14,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -24,7 +25,6 @@ import java.util.List;
 public class EventsController
 {
     private EditController editController;
-    private short refreshed;
 
     @FXML private ChoiceBox<String> choiceBox;
     @FXML private TableView<Event> tableView;
@@ -53,52 +53,48 @@ public class EventsController
         tableView.setItems(eventsData);
     }
 
-
-    public void tuneEvent(TableColumn.CellEditEvent cellEditEvent)
+    public void tuneEvent(MouseEvent mouseEvent)
     {
-        if (refreshed != 0)
+        if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2)
         {
-            refreshed--;
-            return;
-        }
-
-        if (editController == null)
-        {
-            try
+            if (editController == null)
             {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit.fxml"));
-                Parent parent = loader.load();
-                Stage stage = new Stage();
-                stage.setTitle("Мероприятие");
-                stage.setMinWidth(365);
-                stage.setMinHeight(450);
-                Scene scene = new Scene(parent);
-                stage.setScene(scene);
-                stage.initModality(Modality.APPLICATION_MODAL);
-
-                editController = loader.getController();
-                editController.setStage(stage);
-                EditController.eventsController = this;
-
-                stage.setOnCloseRequest(event ->
+                try
                 {
-                    editController.setSize(stage.getWidth(), stage.getHeight());
-                    stage.hide();
-                });
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit.fxml"));
+                    Parent parent = loader.load();
+                    Stage stage = new Stage();
+                    stage.setTitle("Мероприятие");
+                    stage.setMinWidth(365);
+                    stage.setMinHeight(450);
+                    Scene scene = new Scene(parent);
+                    stage.setScene(scene);
+                    stage.initModality(Modality.APPLICATION_MODAL);
 
-        Event event = (Event)cellEditEvent.getRowValue();
-        editController.showWindow(event);
+                    editController = loader.getController();
+                    editController.setStage(stage);
+                    EditController.eventsController = this;
+
+                    stage.setOnCloseRequest(event ->
+                    {
+                        editController.setSize(stage.getWidth(), stage.getHeight());
+                        stage.hide();
+                    });
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            Event event = tableView.getSelectionModel().getSelectedItem();
+            editController.showWindow(event);
+        }
     }
 
     void updateTable()
     {
         tableView.refresh();
-        refreshed = 2;
     }
 }
+

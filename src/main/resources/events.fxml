@@ -17,9 +17,9 @@
         </AnchorPane>
         <AnchorPane prefHeight="216.0" prefWidth="370.0" VBox.vgrow="ALWAYS">
             <children>
-                <TableView fx:id="tableView" layoutX="20.0" layoutY="14.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="187.0" prefWidth="331.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
+                <TableView fx:id="tableView" layoutX="20.0" layoutY="14.0" nodeOrientation="LEFT_TO_RIGHT" onMousePressed="#tuneEvent" prefHeight="187.0" prefWidth="331.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
                     <columns>
-                        <TableColumn fx:id="nameColumn" onEditStart="#tuneEvent" prefWidth="226.0" text="Название" />
+                        <TableColumn fx:id="nameColumn" prefWidth="226.0" text="Название" />
                         <TableColumn fx:id="statusColumn" maxWidth="103.0" minWidth="103.0" prefWidth="103.0" text="Статус" />
                     </columns>
                     <columnResizePolicy>

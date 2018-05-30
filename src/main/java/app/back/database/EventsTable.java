@@ -11,13 +11,14 @@ import java.util.LinkedList;
 
 public class EventsTable
 {
+    private static PreparedStatement getEventsPS;
+    private static PreparedStatement updateEventPS;
+    private static PreparedStatement deleteEventPS;
+
     static void initialize(Connection connection) throws SQLException
     {
-        getEventsNamesPS = connection.prepareStatement("SELECT name " +
-                "FROM events " +
-                "WHERE checked = false AND university = (SELECT id FROM university_list WHERE name = ?)");
-
         getEventsPS = connection.prepareStatement("SELECT " +
+                "  id, " +
                 "  name, " +
                 "  description, " +
                 "  (SELECT name FROM university_list WHERE id = university), " +
@@ -28,66 +29,24 @@ public class EventsTable
                 "  TIME(datetime), " +
                 "  place " +
                 "FROM events " +
-                "WHERE checked = false AND university = (SELECT id FROM university_list WHERE name = ?)");
+                "WHERE checked = FALSE AND university = (SELECT id FROM university_list WHERE name = ?) " +
+                "ORDER BY datetime");
 
-        getEventPS = connection.prepareStatement("SELECT " +
-                "  name, " +
-                "  description, " +
-                "  (SELECT name FROM university_list WHERE id = university), " +
-                "  (SELECT name FROM event_type_list WHERE id = type), " +
-                "  photo, " +
-                "  reference, " +
-                "  DATE(datetime), " +
-                "  TIME(datetime), " +
-                "  place " +
-                "FROM events " +
-                "WHERE name = ?");
 
-        deleteEventPS = connection.prepareStatement("DELETE FROM events WHERE name = ?");
-    }
+        updateEventPS = connection.prepareStatement("UPDATE events " +
+                "SET " +
+                "  checked = ?, " +
+                "  name = ?, " +
+                "  description = ?, " +
+                "  university = (SELECT id FROM university_list WHERE university_list.name = ?), " +
+                "  type = (SELECT id FROM event_type_list WHERE event_type_list.name = ?), " +
+                "  photo = ?, " +
+                "  reference = ?, " +
+                "  datetime = CONCAT(?,' ',?), " +
+                "  place = ? " +
+                "WHERE id = ?");
 
-    public static LinkedList<String> getEventsNames(String university)
-    {
-        LinkedList<String> names = new LinkedList<>();
-        try
-        {
-            getEventsNamesPS.setString(1, university);
-
-            ResultSet resultSet = getEventsNamesPS.executeQuery();
-            while (resultSet.next())
-            {
-                names.add(resultSet.getString(1));
-            }
-
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-
-        return names;
-    }
-
-    public static Event getEvent(String eventName)
-    {
-        Event event = new Event();
-        try
-        {
-            getEventsNamesPS.setString(1, eventName);
-            ResultSet resultSet = getEventsNamesPS.executeQuery();
-
-            resultSet.next();
-            for (int i = 0; i < Event.PARAMS_NUMBER; i++)
-            {
-                event.setParam(i, resultSet.getString(i + 1));
-            }
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-
-        return event;
+        deleteEventPS = connection.prepareStatement("DELETE FROM events WHERE id = ?");
     }
 
     public static LinkedList<Event> getEvents(String university)
@@ -101,9 +60,10 @@ public class EventsTable
             while (resultSet.next())
             {
                 Event event = new Event();
+                event.setId(resultSet.getInt(1));
                 for (int i = 0; i < Event.PARAMS_NUMBER; i++)
                 {
-                    event.setParam(i, resultSet.getString(i + 1));
+                    event.setParam(i, resultSet.getString(i + 2));
                 }
 
                 events.add(event);
@@ -117,12 +77,32 @@ public class EventsTable
         return events;
     }
 
-    public static void deleteEvent(Event event)
+    public static void updateEvent(Event event, boolean status)
     {
-        String name = event.getName();
         try
         {
-            deleteEventPS.setString(1, name);
+            updateEventPS.setBoolean(1, status);
+            String[] params = event.getParams();
+            for (int i = 0; i < params.length; i++)
+            {
+                updateEventPS.setString(i + 2, params[i]);
+            }
+            updateEventPS.setInt(params.length + 2, event.getId());
+
+            updateEventPS.execute();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteEvent(Event event)
+    {
+        int id = event.getId();
+        try
+        {
+            deleteEventPS.setInt(1, id);
             deleteEventPS.execute();
 
         }
@@ -132,9 +112,4 @@ public class EventsTable
         }
 
     }
-
-    private static PreparedStatement getEventsNamesPS;
-    private static PreparedStatement getEventsPS;
-    private static PreparedStatement getEventPS;
-    private static PreparedStatement deleteEventPS;
 }

@@ -2,6 +2,11 @@ package app.back;
 
 public class Event
 {
+    public static final String WAITED = "Ожидает";
+    public static final String DELETED = "Удалено";
+    public static final String READY = "Утверждено";
+
+    private int id;
     private String status;
     private String[] params;                 // значения параметров
     // 0 - name
@@ -18,7 +23,7 @@ public class Event
 
     public Event()
     {
-        status = "Ожидает";
+        status = WAITED;
         params = new String[PARAMS_NUMBER];
     }
 
@@ -46,6 +51,10 @@ public class Event
         this.status = status;
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
+
     /**
      * Устанавливает значение параметра мероприятия
      * @param paramNumber Номер параметра
@@ -60,7 +69,7 @@ public class Event
      * Геттер
      * @return Передает поля мероприятия
      */
-    public String[] getEventParams()
+    public String[] getParams()
     {
         return params;
     }
@@ -77,6 +86,10 @@ public class Event
     public String getName()
     {
         return params[0];
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getStatus()

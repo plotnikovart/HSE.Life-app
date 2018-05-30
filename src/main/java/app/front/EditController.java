@@ -7,10 +7,14 @@ import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.stage.Stage;
 
 
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -63,6 +67,7 @@ public class EditController
     void showWindow(Event event)
     {
         currentEvent = event;
+        resetColors();
 
         name.setText(event.getParam(0));
         description.setText(event.getParam(1));
@@ -80,7 +85,7 @@ public class EditController
         }
         else
         {
-            time.setText(timeS);
+            time.setText(timeS.substring(0, 5));
         }
 
         String placeS = event.getParam(8);
@@ -116,16 +121,127 @@ public class EditController
     {
         if (deleteFlag.isSelected())
         {
-            //EventsTable.deleteEvent(currentEvent);
-            currentEvent.setStatus("Удалено");
-            eventsController.updateTable();
+            EventsTable.deleteEvent(currentEvent);
+            currentEvent.setStatus(Event.DELETED);
         }
-
-        if (allowFlag.isSelected())
+        else
         {
-            System.out.println(2);
+            if (!checkFields())
+            {
+                return;
+            }
+
+            // Перенос значений формы в event
+            currentEvent.setParam(0, name.getText());
+            currentEvent.setParam(1, description.getText());
+            currentEvent.setParam(2, (String)university.getValue());
+            currentEvent.setParam(3, (String)type.getValue());
+            currentEvent.setParam(4, photoRef.getText());
+            currentEvent.setParam(5, ref.getText());
+
+            LocalDate localDate = date.getValue();
+            String dateStr = localDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+            currentEvent.setParam(6, dateStr);
+
+            if (time.getText().equals(""))
+            {
+                currentEvent.setParam(7, "00:00:01");
+            }
+            else
+            {
+                currentEvent.setParam(7, time.getText());
+            }
+
+            currentEvent.setParam(8, place.getText());
+
+            if (allowFlag.isSelected())
+            {
+                EventsTable.updateEvent(currentEvent, true);
+                currentEvent.setStatus(Event.READY);
+            }
+            else
+            {
+                EventsTable.updateEvent(currentEvent, false);
+                currentEvent.setStatus(Event.WAITED);
+            }
         }
 
+        eventsController.updateTable();
         stage.hide();
+    }
+
+    private boolean checkFields()
+    {
+        String errorColor = "-fx-background-color: LightCoral;";
+        String goodColor = "-fx-background-color: white;";
+        boolean returnValue = true;
+
+        if (name.getText().equals(""))
+        {
+            name.setStyle(errorColor);
+            returnValue = false;
+        }
+        else
+        {
+            name.setStyle(goodColor);
+        }
+
+        if (description.getText().equals(""))
+        {
+            description.setStyle(errorColor);
+            returnValue = true;
+        }
+        else
+        {
+            description.setStyle(goodColor);
+        }
+
+        if (photoRef.getText().equals(""))
+        {
+            photoRef.setStyle(errorColor);
+            returnValue = false;
+        }
+        else
+        {
+            photoRef.setStyle(goodColor);
+        }
+
+        if (ref.getText().equals(""))
+        {
+            ref.setStyle(errorColor);
+            returnValue = false;
+        }
+        else
+        {
+            ref.setStyle(goodColor);
+        }
+
+        // Проверка формата ввода (ЧЧ:ММ)
+        try
+        {
+            if (!time.getText().equals(""))
+            {
+                Time.valueOf(time.getText() + ":00");
+            }
+            time.setStyle(goodColor);
+        }
+        catch (IllegalArgumentException e)
+        {
+            time.setStyle(errorColor);
+            returnValue = false;
+        }
+
+        return returnValue;
+    }
+
+    private void resetColors()
+    {
+        String goodColor = "-fx-background-color: white;";
+        name.setStyle(goodColor);
+        description.setStyle(goodColor);
+        ref.setStyle(goodColor);
+        photoRef.setStyle(goodColor);
+        time.setStyle(goodColor);
+        place.setStyle(goodColor);
     }
 }
