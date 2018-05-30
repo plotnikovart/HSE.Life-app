@@ -55,7 +55,7 @@ public class EventsTable
                 "(SELECT id FROM event_type_list WHERE event_type_list.name = ?), " +
                 "?, ?, CONCAT(?, ' ', ?), ?)");
 
-        deleteEventPS = connection.prepareStatement("DELETE FROM events WHERE id = ?");
+        deleteEventPS = connection.prepareStatement("DELETE FROM events WHERE name = ?");
     }
 
     public static LinkedList<Event> getEvents(String university)
@@ -127,10 +127,10 @@ public class EventsTable
 
     public static void deleteEvent(Event event)
     {
-        int id = event.getId();
+        String name = event.getName();
         try
         {
-            deleteEventPS.setInt(1, id);
+            deleteEventPS.setString(1, name);
             deleteEventPS.execute();
 
         }

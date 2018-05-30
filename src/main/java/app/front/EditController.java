@@ -7,16 +7,12 @@ import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.stage.Stage;
 
-
-import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
-import java.util.Locale;
 import java.util.Objects;
 
 
@@ -38,7 +34,7 @@ public class EditController
     public RadioButton allowFlag;
     public RadioButton deleteFlag;
 
-    boolean isAdded = false;
+    private boolean isAdded = false;
     private Event currentEvent;
     private Stage stage;
     private double currentWidth, currentHeight;     // текущая ширина и высота (для сохранения размеров окна)

@@ -8,6 +8,9 @@ import java.util.LinkedList;
 
 public class EnumTable
 {
+    private static PreparedStatement getUniversitiesPS;
+    private static PreparedStatement getEventsTypesPS;
+
     static void initialize(Connection connection) throws SQLException
     {
         getUniversitiesPS = connection.prepareStatement("SELECT name FROM university_list ORDER BY name");
@@ -53,7 +56,4 @@ public class EnumTable
 
         return types;
     }
-
-    private static PreparedStatement getUniversitiesPS;
-    private static PreparedStatement getEventsTypesPS;
 }

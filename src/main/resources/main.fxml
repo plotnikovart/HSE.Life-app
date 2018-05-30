@@ -4,23 +4,28 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<TabPane prefWidth="370.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
-  <tabs>
-    <Tab text="Мероприятия">
-         <content>
-             <fx:include source="events.fxml"/>
-         </content>
-    </Tab>
-    <Tab text="Университеты">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
-    </Tab>
-      <Tab text="Тематики">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-        </content>
-      </Tab>
-  </tabs>
+<TabPane prefWidth="370.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <tabs>
+        <Tab text="Мероприятия">
+            <content>
+                <fx:include source="events.fxml"/>
+            </content>
+        </Tab>
+        <Tab text="Фотографии">
+            <content>
+              <fx:include source="photos.fxml"/>
+            </content>
+        </Tab>
+        <Tab text="Университеты">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+            </content>
+        </Tab>
+        <Tab text="Тематики">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+            </content>
+        </Tab>
+    </tabs>
 </TabPane>
