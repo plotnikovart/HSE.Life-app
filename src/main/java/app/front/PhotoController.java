@@ -1,17 +1,16 @@
 package app.front;
 
-import app.back.Event;
 import app.back.Photo;
-import app.back.database.EventsTable;
 
+import app.back.database.EnumTable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class PhotoController
@@ -29,10 +28,19 @@ public class PhotoController
 
         table.setEditable(true);
 
-        List<Photo> photos = new LinkedList<>();
-        photos.add(new Photo());
+        List<Photo> photos = EnumTable.getPhotos();
         ObservableList<Photo> photosData = FXCollections.observableArrayList(photos);
 
+        refColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         table.setItems(photosData);
+    }
+
+    public void changeRef(TableColumn.CellEditEvent<Photo, String> photoStringCellEditEvent)
+    {
+        Photo currentPhoto = table.getSelectionModel().getSelectedItem();
+        String newRef = photoStringCellEditEvent.getNewValue();
+
+        currentPhoto.setRef(newRef);
+        EnumTable.updatePhoto(currentPhoto);
     }
 }

@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-
-<VBox prefHeight="340.0" prefWidth="356.0" fx:controller="app.front.PhotoController" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="340.0" prefWidth="356.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.front.PhotoController">
    <children>
-      <TableView fx:id="table" editable="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="NEVER">
+      <TableView fx:id="table" editable="true" prefHeight="195.0" prefWidth="316.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
         <columns>
-          <TableColumn fx:id="dayColumn" prefWidth="75.0" resizable="false" text="День" />
-          <TableColumn fx:id="refColumn" prefWidth="240.0" text="Ссылка на фотографию" />
+          <TableColumn fx:id="dayColumn" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" text="День" />
+          <TableColumn fx:id="refColumn" onEditCommit="#changeRef" prefWidth="240.0" text="Ссылка на фотографию" />
         </columns>
-         <VBox.margin>
-            <Insets left="20.0" right="20.0" top="10.0" />
-         </VBox.margin>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
-      <AnchorPane prefHeight="171.0" prefWidth="356.0">
-         <children>
-            <Button layoutX="283.0" layoutY="14.0" mnemonicParsing="false" text="Загрузить изменения" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
-         </children>
-      </AnchorPane>
    </children>
-</VBox>
+</AnchorPane>

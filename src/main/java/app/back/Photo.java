@@ -3,14 +3,19 @@ package app.back;
 public class Photo
 {
     private int id;
-    private String day;
     private String ref;
 
     private String[] days = {"пн", "вт", "ср", "чт", "пт", "сб", "вс"};
 
-    public Photo(){
-        id = 1;
-        ref = "dsaa";
+    public Photo(int id, String ref)
+    {
+        this.id = id;
+        this.ref = ref;
+    }
+
+    public void setRef(String ref)
+    {
+        this.ref = ref;
     }
 
     public String getDay()
@@ -21,5 +26,10 @@ public class Photo
     public String getRef()
     {
         return ref;
+    }
+
+    public int getDayId()
+    {
+        return id;
     }
 }
