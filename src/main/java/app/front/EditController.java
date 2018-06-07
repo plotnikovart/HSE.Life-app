@@ -33,6 +33,7 @@ public class EditController
 
     public RadioButton allowFlag;
     public RadioButton deleteFlag;
+    public RadioButton waitButton;
 
     private boolean isAdded = false;
     private Event currentEvent;
@@ -226,7 +227,7 @@ public class EditController
         if (description.getText().equals(""))
         {
             description.setStyle(errorColor);
-            returnValue = true;
+            returnValue = false;
         }
         else
         {
@@ -287,6 +288,8 @@ public class EditController
         time.setText("");
         place.setStyle(goodColor);
         place.setText("");
+
+        waitButton.setSelected(true);
 
         if (university.getValue() == null)
         {

@@ -181,7 +181,7 @@
       </GridPane>
       <HBox prefHeight="46.0" prefWidth="365.0">
          <children>
-            <RadioButton mnemonicParsing="false" selected="true" text="Ожидание">
+            <RadioButton fx:id="waitButton" mnemonicParsing="false" selected="true" text="Ожидание">
                <HBox.margin>
                   <Insets left="20.0" top="20.0" />
                </HBox.margin>

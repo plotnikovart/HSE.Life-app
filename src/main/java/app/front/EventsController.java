@@ -14,6 +14,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -81,10 +82,11 @@ public class EventsController
     {
         try
         {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/edit.fxml"));
             Parent parent = loader.load();
             Stage stage = new Stage();
             stage.setTitle("Мероприятие");
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
             stage.setMinWidth(365);
             stage.setMinHeight(450);
             Scene scene = new Scene(parent);
